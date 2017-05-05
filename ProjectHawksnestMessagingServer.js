@@ -1,32 +1,3 @@
-/*
----------------------------------------------------------VARIABLES---------------------------------------------------------
-*/
-// Interval in seconds to send notification.
-const refreshRate = 180;
-// Seconds into the refreshRate
-var seconds = (function(){var date = new Date(); return ((date.getMinutes()*60)+date.getSeconds());});;
-
-// Subscribable topics
-var topics = ['python', 'droomvlucht', 'sprookjesbos']
-
-// Payloads corresponding to topics
-var payloads = [{
-	data: {
-		time: "120"
-		}
-}, {
-	data: {
-		time: "60"
-		}
-}, {
-	data: {
-		time: "30"
-		}
-}];
-
-/*
----------------------------------------------------------MAIN---------------------------------------------------------
-*/
 // Initialisation
 var admin = require("firebase-admin");
 var serviceAccount = require("./test-e8411-firebase-adminsdk-ddkq9-49bd03de98.json");
@@ -36,31 +7,37 @@ admin.initializeApp({
   databaseURL: "https://test-e8411.firebaseio.com/"
 });
 
-update();
+var db = admin.database();
+var attractionsRef = db.ref("attractions");
+var refreshRate;
 
-/*
----------------------------------------------------------FUNCTIONS---------------------------------------------------------
-*/
-
-// If it is time sendAll() else update()
-function update() {
-	if(seconds() % refreshRate == 0) {
-		sendAll();
-		setTimeout(update, (refreshRate - (seconds()%refreshRate) - 1) * 1000);
-	} else if(seconds <= 1) {
-		setTimeout(update, 10);
-	} else {
-		setTimeout(update, (refreshRate - (seconds()%refreshRate) - 1) * 1000);
+// Listen for database changes
+attractionsRef.on("child_changed", function(snapshot) {
+	console.log("Attraction: " + snapshot.ref.key + "\tOpen: " + snapshot.val().open + "\tWaiting time: " + snapshot.val().waitingTime);
+	if (snapshot.val().open) {
+	send(snapshot.ref.key, snapshot.val().waitingTime);
 	}
-}
+});
+
+db.ref("refreshRate").on("value", function(snapshot) {
+	refreshRate = snapshot.val();
+});
 
 // Send a message to all topics
-function sendAll() {
+function send(attraction, waitingTime) {
 	// Send a message to devices subscribed to the provided topic.
-	for(var i = 0; i < topics.length; i++) {
-	var topic = topics[i];
-	var payload = payloads[i];
-	admin.messaging().sendToTopic(topic, payload)
+	var payload = {
+		notification: {
+			title: attraction.toString(),
+			body: waitingTime.toString()
+		}
+};
+
+var options = {
+	priority: "high",
+	timeToLive: refreshRate
+};
+	admin.messaging().sendToTopic(attraction, payload, options)
 	.then(function(response) {
     // See the MessagingTopicResponse reference documentation for the
     // contents of response.
@@ -69,5 +46,4 @@ function sendAll() {
   .catch(function(error) {
 	  console.log("Error sending message:", error);
 	  });
-	}
 }

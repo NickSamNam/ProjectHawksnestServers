@@ -17,7 +17,7 @@ attractionsRef.once("value", function(snapshot) {
 });
 
 attractionsRef.update({
-	"droomvlucht/open" : "true",
-	"droomvlucht/waitingTime" : "15",
-	"sprookjesbos/waitingTime" : "15"
+	"droomvlucht/open" : true,
+	"droomvlucht/waitingTime" : 15,
+	"sprookjesbos/waitingTime" : 15
 });
