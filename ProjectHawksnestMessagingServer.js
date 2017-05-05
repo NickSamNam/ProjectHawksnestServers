@@ -1,10 +1,10 @@
 // Initialisation
 var admin = require("firebase-admin");
-var serviceAccount = require("./test-e8411-firebase-adminsdk-ddkq9-49bd03de98.json");
+var serviceAccount = require("./project-hawksnest-firebase-adminsdk-ff34s-2ea5bd7319.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://test-e8411.firebaseio.com/"
+  databaseURL: "https://project-hawksnest.firebaseio.com/"
 });
 
 var db = admin.database();

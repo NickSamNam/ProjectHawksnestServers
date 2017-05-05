@@ -1,13 +1,10 @@
-/*
----------------------------------------------------------MAIN---------------------------------------------------------
-*/
 // Initialisation
 var admin = require("firebase-admin");
-var serviceAccount = require("./test-e8411-firebase-adminsdk-ddkq9-49bd03de98.json");
+var serviceAccount = require("./project-hawksnest-firebase-adminsdk-ff34s-2ea5bd7319.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://test-e8411.firebaseio.com/"
+  databaseURL: "https://project-hawksnest.firebaseio.com/"
 });
 
 var db = admin.database();
@@ -27,13 +24,18 @@ update();
 
 function update() {
 	if(seconds() % refreshRate == 0) {
-		attractionsRef.update({
-			"python/waitingTime" : 120*Math.random()
-});
+		console.log("Updating values");
+		attractionsRef.update(updateVals());
 		setTimeout(update, (refreshRate - (seconds()%refreshRate) - 1) * 1000);
 	} else if(seconds <= 1) {
 		setTimeout(update, 10);
 	} else {
 		setTimeout(update, (refreshRate - (seconds()%refreshRate) - 1) * 1000);
 	}
+}
+
+function updateVals() {
+	return {
+			"python/waitingTime" : Math.round(120*Math.random())
+	};
 }
