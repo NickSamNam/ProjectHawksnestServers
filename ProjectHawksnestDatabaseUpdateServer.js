@@ -27,8 +27,14 @@ update();
 
 function update() {
 	if(seconds() % refreshRate == 0) {
-		console.log("Updating values");
-		attractionsRef.update(updateVals());
+		attractionsRef.update(updateVals(), function(error) {
+												if(error) {
+													console.log("Data could not be saved." + error);
+												} else {
+													console.log("Data saved succesfully.");
+												}
+											}
+		);
 		setTimeout(update, (refreshRate - (seconds()%refreshRate) - 1) * 1000);
 	} else if(seconds <= 1) {
 		setTimeout(update, 10);
