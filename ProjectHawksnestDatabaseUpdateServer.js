@@ -11,7 +11,13 @@ admin.initializeApp({
 });
 
 var db = admin.database();
-var ref = db.ref("restricted_access/secret_document");
-ref.once("value", function(snapshot) {
+var attractionsRef = db.ref("attractions");
+attractionsRef.once("value", function(snapshot) {
   console.log(snapshot.val());
+});
+
+attractionsRef.update({
+	"droomvlucht/open" : "true",
+	"droomvlucht/waitingTime" : "15",
+	"sprookjesbos/waitingTime" : "15"
 });
