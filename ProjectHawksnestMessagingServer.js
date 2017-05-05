@@ -16,9 +16,9 @@ var refreshRate;
 
 // Listen for database changes
 attractionsRef.on("child_changed", function(snapshot) {
-	console.log("Attraction: " + snapshot.ref.key + "\tOpen: " + snapshot.val().open + "\tWaiting time: " + snapshot.val().waitingTime);
 	if (snapshot.val().open) {
-	send(snapshot.ref.key, snapshot.val().waitingTime);
+		console.log("\n"+ new Date);
+		send(snapshot.ref.key, snapshot.val().waitingTime);
 	}
 });
 

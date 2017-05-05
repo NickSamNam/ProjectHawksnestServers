@@ -27,9 +27,10 @@ update();
 
 function update() {
 	if(seconds() % refreshRate == 0) {
+		console.log("\n" + new Date);
 		attractionsRef.update(updateVals(), function(error) {
 												if(error) {
-													console.log("Data could not be saved." + error);
+													console.log("Data could not be saved. " + error);
 												} else {
 													console.log("Data saved succesfully.");
 												}
