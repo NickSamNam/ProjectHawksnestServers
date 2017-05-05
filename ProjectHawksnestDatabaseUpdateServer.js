@@ -4,7 +4,10 @@ var serviceAccount = require("./project-hawksnest-firebase-adminsdk-ff34s-2ea5bd
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://project-hawksnest.firebaseio.com/"
+  databaseURL: "https://project-hawksnest.firebaseio.com/",
+  databaseAuthVariableOverride: {
+	  uid: "databaseUpdateServer"
+  }
 });
 
 var db = admin.database();
